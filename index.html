@@ -15,101 +15,6 @@ body{
   color:white;
 }
 
-/* NAVBAR (mobile) */
-.topbar{
-  display:none;
-  background:#020617;
-  padding:15px;
-  justify-content:space-between;
-}
-
-.menu-btn{
-  font-size:20px;
-  cursor:pointer;
-}
-
-/* LAYOUT */
-.wrapper{
-  display:flex;
-}
-
-/* SIDEBAR */
-.sidebar{
-  width:250px;
-  background:#020617;
-  height:100vh;
-  padding:20px;
-  position:fixed;
-  transition:0.3s;
-}
-
-.sidebar h2{
-  margin-bottom:30px;
-}
-
-.sidebar button{
-  width:100%;
-  padding:12px;
-  margin-bottom:10px;
-  border:none;
-  border-radius:10px;
-  background:#1e293b;
-  color:white;
-  cursor:pointer;
-}
-
-/* MAIN */
-.main{
-  margin-left:250px;
-  padding:20px;
-  width:100%;
-}
-
-/* CARDS */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:15px;
-  margin-bottom:20px;
-}
-
-.card{
-  background:rgba(255,255,255,0.05);
-  padding:20px;
-  border-radius:15px;
-  backdrop-filter:blur(10px);
-  text-align:center;
-}
-
-/* FORM */
-.form{
-  background:#1e293b;
-  padding:20px;
-  border-radius:15px;
-  max-width:600px;
-}
-
-input,select{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:8px;
-  background:#334155;
-  color:white;
-}
-
-button.primary{
-  margin-top:15px;
-  width:100%;
-  padding:12px;
-  background:#22c55e;
-  border:none;
-  border-radius:10px;
-  color:white;
-  cursor:pointer;
-}
-
 /* LOGIN */
 .login{
   position:fixed;
@@ -127,27 +32,82 @@ button.primary{
   width:300px;
 }
 
+input,select{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  background:#334155;
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:10px;
+  background:#22c55e;
+  color:white;
+  cursor:pointer;
+}
+
+/* APP */
 .hidden{display:none;}
 
-/* 🔥 MOBILE */
+.wrapper{
+  display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:250px;
+  background:#020617;
+  height:100vh;
+  padding:20px;
+  position:fixed;
+}
+
+.sidebar button{
+  width:100%;
+  margin-top:10px;
+}
+
+/* MAIN */
+.main{
+  margin-right:250px;
+  padding:20px;
+  width:100%;
+}
+
+/* CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+}
+
+.card{
+  background:#1e293b;
+  padding:20px;
+  border-radius:12px;
+  text-align:center;
+}
+
+/* FORM */
+.form{
+  margin-top:20px;
+  max-width:500px;
+}
+
+/* MOBILE */
 @media(max-width:768px){
-
-  .topbar{
-    display:flex;
-  }
-
   .sidebar{
-    transform:translateX(100%);
-    position:fixed;
-    right:0;
+    display:none;
   }
-
-  .sidebar.active{
-    transform:translateX(0);
-  }
-
   .main{
-    margin-left:0;
+    margin-right:0;
   }
 }
 </style>
@@ -155,29 +115,26 @@ button.primary{
 
 <body>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <div>Mostajer</div>
-  <div class="menu-btn" onclick="toggleMenu()">☰</div>
-</div>
-
 <!-- LOGIN -->
 <div class="login" id="login">
   <div class="login-box">
     <h3>🔐 تسجيل الدخول</h3>
     <input id="email" placeholder="الإيميل">
     <input id="pass" placeholder="الرمز">
-    <button class="primary" onclick="login()">دخول</button>
+    <button onclick="login()">دخول</button>
   </div>
 </div>
+
+<!-- APP -->
+<div id="app" class="hidden">
 
 <div class="wrapper">
 
 <!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
+<div class="sidebar">
   <h2>Mostajer</h2>
-  <button onclick="show('dashboard')">📊 الرئيسية</button>
-  <button onclick="show('create')">➕ إنشاء كود</button>
+  <button onclick="showPage('dashboard')">📊 الرئيسية</button>
+  <button onclick="showPage('create')">➕ إنشاء كود</button>
 </div>
 
 <!-- MAIN -->
@@ -210,7 +167,7 @@ button.primary{
     <input id="amount" placeholder="المبلغ">
     <input id="country" placeholder="الدولة">
 
-    <button class="primary" onclick="create()">إنشاء</button>
+    <button onclick="create()">إنشاء</button>
 
     <p id="result"></p>
   </div>
@@ -219,47 +176,48 @@ button.primary{
 </div>
 </div>
 
+</div>
+
 <script>
 
-const API = "PUT_YOUR_APPS_SCRIPT_URL_HERE";
-
+// 🔐 تسجيل الدخول
 function login(){
-  if(email.value==="saeed_200911@hotmail.com" && pass.value==="Saee200911"){
-    login.style.display="none";
+  if(
+    document.getElementById("email").value==="saeed_200911@hotmail.com" &&
+    document.getElementById("pass").value==="Saee200911"
+  ){
+    document.getElementById("login").style.display="none";
+    document.getElementById("app").classList.remove("hidden");
   }else{
-    alert("خطأ");
+    alert("❌ بيانات خاطئة");
   }
 }
 
-function toggleMenu(){
-  document.getElementById("sidebar").classList.toggle("active");
-}
-
-function show(page){
+// 🔁 التنقل
+function showPage(page){
   document.getElementById("dashboard").classList.add("hidden");
   document.getElementById("create").classList.add("hidden");
+
   document.getElementById(page).classList.remove("hidden");
 }
 
+// 🚀 إنشاء كود
 function create(){
   const data = {
-    name:name.value,
-    phone:phone.value,
-    deviceId:device.value,
-    duration:duration.value,
-    amount:amount.value,
-    country:country.value
+    name: name.value,
+    phone: phone.value,
+    deviceId: device.value,
+    duration: duration.value,
+    amount: amount.value,
+    country: country.value
   };
 
-  fetch(API,{
-    method:"POST",
-    body:JSON.stringify(data)
-  })
-  .then(r=>r.json())
-  .then(res=>{
-    result.innerText="✅ "+res.code;
-  });
+  // هنا تحط API حقك
+  console.log(data);
+
+  result.innerText = "✅ تم الإرسال (اربط API)";
 }
+
 </script>
 
 </body>
