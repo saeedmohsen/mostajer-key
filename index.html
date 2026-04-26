@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mostajer Pro Dashboard</title>
+<title>Mostajer Dashboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 
@@ -11,18 +11,36 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
 
 body{
-  display:flex;
   background:#0f172a;
   color:white;
 }
 
-/* Sidebar */
-.sidebar{
-  width:240px;
-  height:100vh;
+/* NAVBAR (mobile) */
+.topbar{
+  display:none;
   background:#020617;
+  padding:15px;
+  justify-content:space-between;
+}
+
+.menu-btn{
+  font-size:20px;
+  cursor:pointer;
+}
+
+/* LAYOUT */
+.wrapper{
+  display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:250px;
+  background:#020617;
+  height:100vh;
   padding:20px;
   position:fixed;
+  transition:0.3s;
 }
 
 .sidebar h2{
@@ -40,17 +58,17 @@ body{
   cursor:pointer;
 }
 
-/* Main */
+/* MAIN */
 .main{
-  margin-left:240px;
+  margin-left:250px;
   padding:20px;
   width:100%;
 }
 
-/* Cards */
+/* CARDS */
 .cards{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
   gap:15px;
   margin-bottom:20px;
 }
@@ -59,19 +77,21 @@ body{
   background:rgba(255,255,255,0.05);
   padding:20px;
   border-radius:15px;
-  backdrop-filter: blur(10px);
+  backdrop-filter:blur(10px);
+  text-align:center;
 }
 
-/* Form */
+/* FORM */
 .form{
   background:#1e293b;
   padding:20px;
   border-radius:15px;
+  max-width:600px;
 }
 
 input,select{
   width:100%;
-  padding:10px;
+  padding:12px;
   margin-top:10px;
   border:none;
   border-radius:8px;
@@ -81,15 +101,16 @@ input,select{
 
 button.primary{
   margin-top:15px;
-  background:#22c55e;
+  width:100%;
   padding:12px;
+  background:#22c55e;
   border:none;
   border-radius:10px;
   color:white;
   cursor:pointer;
 }
 
-/* Login */
+/* LOGIN */
 .login{
   position:fixed;
   inset:0;
@@ -108,10 +129,37 @@ button.primary{
 
 .hidden{display:none;}
 
+/* 🔥 MOBILE */
+@media(max-width:768px){
+
+  .topbar{
+    display:flex;
+  }
+
+  .sidebar{
+    transform:translateX(100%);
+    position:fixed;
+    right:0;
+  }
+
+  .sidebar.active{
+    transform:translateX(0);
+  }
+
+  .main{
+    margin-left:0;
+  }
+}
 </style>
 </head>
 
 <body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div>Mostajer</div>
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+</div>
 
 <!-- LOGIN -->
 <div class="login" id="login">
@@ -123,8 +171,10 @@ button.primary{
   </div>
 </div>
 
+<div class="wrapper">
+
 <!-- SIDEBAR -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
   <h2>Mostajer</h2>
   <button onclick="show('dashboard')">📊 الرئيسية</button>
   <button onclick="show('create')">➕ إنشاء كود</button>
@@ -136,8 +186,8 @@ button.primary{
 <!-- DASHBOARD -->
 <div id="dashboard">
   <div class="cards">
-    <div class="card">💰 الأرباح<br><b id="money">0</b></div>
-    <div class="card">🔑 الأكواد<br><b id="codes">0</b></div>
+    <div class="card">💰 الأرباح<br><b>0</b></div>
+    <div class="card">🔑 الأكواد<br><b>0</b></div>
     <div class="card">🌍 الدول<br><b>0</b></div>
   </div>
 </div>
@@ -167,20 +217,22 @@ button.primary{
 </div>
 
 </div>
+</div>
 
 <script>
 
 const API = "PUT_YOUR_APPS_SCRIPT_URL_HERE";
 
 function login(){
-  if(
-    email.value==="saeed_200911@hotmail.com" &&
-    pass.value==="Saee200911"
-  ){
+  if(email.value==="saeed_200911@hotmail.com" && pass.value==="Saee200911"){
     login.style.display="none";
   }else{
     alert("خطأ");
   }
+}
+
+function toggleMenu(){
+  document.getElementById("sidebar").classList.toggle("active");
 }
 
 function show(page){
@@ -191,24 +243,23 @@ function show(page){
 
 function create(){
   const data = {
-    name: name.value,
-    phone: phone.value,
-    deviceId: device.value,
-    duration: duration.value,
-    amount: amount.value,
-    country: country.value
+    name:name.value,
+    phone:phone.value,
+    deviceId:device.value,
+    duration:duration.value,
+    amount:amount.value,
+    country:country.value
   };
 
   fetch(API,{
     method:"POST",
-    body: JSON.stringify(data)
+    body:JSON.stringify(data)
   })
   .then(r=>r.json())
   .then(res=>{
-    result.innerText = "✅ " + res.code;
+    result.innerText="✅ "+res.code;
   });
 }
-
 </script>
 
 </body>
