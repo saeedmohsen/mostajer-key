@@ -1,1 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mostajer Dashboard</title>
 
+<style>
+body {
+  font-family: sans-serif;
+  background: #0f172a;
+  color: white;
+  margin:0;
+}
+
+.container {
+  max-width: 900px;
+  margin:auto;
+  padding:20px;
+}
+
+.card {
+  background:#1e293b;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+}
+
+input, select, button {
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+}
+
+input, select {
+  background:#334155;
+  color:white;
+}
+
+button {
+  background:#22c55e;
+  color:white;
+  cursor:pointer;
+}
+
+.hidden { display:none; }
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:10px;
+}
+
+.stat {
+  background:#334155;
+  padding:15px;
+  border-radius:10px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- LOGIN -->
+<div class="card" id="login">
+<h3>🔐 تسجيل الدخول</h3>
+<input id="email" placeholder="الإيميل">
+<input id="pass" placeholder="الرمز">
+<button onclick="login()">دخول</button>
+</div>
+
+<!-- PANEL -->
+<div id="panel" class="hidden">
+
+<div class="card">
+<h3>📊 الإحصائيات</h3>
+<div class="stats">
+<div class="stat">💰 <span id="money">0</span></div>
+<div class="stat">🔑 <span id="codes">0</span></div>
+</div>
+</div>
+
+<div class="card">
+<h3>➕ إنشاء كود</h3>
+
+<input id="name" placeholder="الاسم">
+<input id="phone" placeholder="رقم الجوال">
+<input id="device" placeholder="رقم الجهاز">
+
+<select id="duration">
+<option>شهر</option>
+<option>سنة</option>
+<option>أسبوع</option>
+<option>يوم</option>
+<option>ساعة</option>
+<option>دقيقة</option>
+<option>مدى الحياة</option>
+</select>
+
+<input id="amount" placeholder="المبلغ">
+<input id="country" placeholder="الدولة">
+
+<button onclick="create()">إنشاء الكود</button>
+
+<p id="result"></p>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const API = "PUT_YOUR_APPS_SCRIPT_URL_HERE";
+
+// LOGIN
+function login(){
+  if(
+    document.getElementById("email").value==="saeed_200911@hotmail.com" &&
+    document.getElementById("pass").value==="Saee200911"
+  ){
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("panel").classList.remove("hidden");
+  }else{
+    alert("بيانات غلط");
+  }
+}
+
+// CREATE CODE
+function create(){
+
+  const data = {
+    name: name.value,
+    phone: phone.value,
+    deviceId: device.value,
+    duration: duration.value,
+    amount: amount.value,
+    country: country.value
+  };
+
+  fetch(API,{
+    method:"POST",
+    body: JSON.stringify(data)
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.error){
+      alert(res.error);
+    }else{
+      result.innerText = "✅ " + res.code;
+    }
+  });
+
+}
+
+</script>
+
+</body>
+</html>
