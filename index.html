@@ -1,223 +1,84 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mostajer Dashboard</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<title>MostajerPro</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
-
-body{
-  background:#0f172a;
-  color:white;
+body {
+  font-family: Arial;
+  text-align: center;
+  margin-top: 50px;
 }
 
-/* LOGIN */
-.login{
-  position:fixed;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#020617;
+input, select {
+  padding: 10px;
+  margin: 5px;
+  width: 250px;
 }
 
-.login-box{
-  background:#1e293b;
-  padding:30px;
-  border-radius:15px;
-  width:300px;
+button {
+  padding: 10px 20px;
+  background: green;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
-input,select{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:8px;
-  background:#334155;
-  color:white;
-}
-
-button{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:10px;
-  background:#22c55e;
-  color:white;
-  cursor:pointer;
-}
-
-/* APP */
-.hidden{display:none;}
-
-.wrapper{
-  display:flex;
-}
-
-/* SIDEBAR */
-.sidebar{
-  width:250px;
-  background:#020617;
-  height:100vh;
-  padding:20px;
-  position:fixed;
-}
-
-.sidebar button{
-  width:100%;
-  margin-top:10px;
-}
-
-/* MAIN */
-.main{
-  margin-right:250px;
-  padding:20px;
-  width:100%;
-}
-
-/* CARDS */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:15px;
-}
-
-.card{
-  background:#1e293b;
-  padding:20px;
-  border-radius:12px;
-  text-align:center;
-}
-
-/* FORM */
-.form{
-  margin-top:20px;
-  max-width:500px;
-}
-
-/* MOBILE */
-@media(max-width:768px){
-  .sidebar{
-    display:none;
-  }
-  .main{
-    margin-right:0;
-  }
+#result {
+  margin-top: 20px;
+  font-size: 18px;
 }
 </style>
+
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div class="login" id="login">
-  <div class="login-box">
-    <h3>🔐 تسجيل الدخول</h3>
-    <input id="email" placeholder="الإيميل">
-    <input id="pass" placeholder="الرمز">
-    <button onclick="login()">دخول</button>
-  </div>
-</div>
+<h2>إنشاء كود تفعيل</h2>
 
-<!-- APP -->
-<div id="app" class="hidden">
+<input id="name" placeholder="اسم المستخدم"><br>
+<input id="phone" placeholder="رقم الجوال"><br>
+<input id="device" placeholder="رقم الجهاز"><br>
 
-<div class="wrapper">
+<select id="duration">
+  <option>شهر</option>
+  <option>سنة</option>
+  <option>أسبوع</option>
+  <option>يوم</option>
+  <option>ساعة</option>
+  <option>دقيقة</option>
+  <option>مدى الحياة</option>
+</select>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <h2>Mostajer</h2>
-  <button onclick="showPage('dashboard')">📊 الرئيسية</button>
-  <button onclick="showPage('create')">➕ إنشاء كود</button>
-</div>
+<br><br>
+<button onclick="sendData()">إنشاء الكود</button>
 
-<!-- MAIN -->
-<div class="main">
-
-<!-- DASHBOARD -->
-<div id="dashboard">
-  <div class="cards">
-    <div class="card">💰 الأرباح<br><b>0</b></div>
-    <div class="card">🔑 الأكواد<br><b>0</b></div>
-    <div class="card">🌍 الدول<br><b>0</b></div>
-  </div>
-</div>
-
-<!-- CREATE -->
-<div id="create" class="hidden">
-  <div class="form">
-    <h3>إنشاء كود</h3>
-
-    <input id="name" placeholder="الاسم">
-    <input id="phone" placeholder="رقم الجوال">
-    <input id="device" placeholder="رقم الجهاز">
-
-    <select id="duration">
-      <option>شهر</option>
-      <option>سنة</option>
-      <option>مدى الحياة</option>
-    </select>
-
-    <input id="amount" placeholder="المبلغ">
-    <input id="country" placeholder="الدولة">
-
-    <button onclick="create()">إنشاء</button>
-
-    <p id="result"></p>
-  </div>
-</div>
-
-</div>
-</div>
-
-</div>
+<div id="result"></div>
 
 <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxUqirI5oqTTLnVamjUKcgbc0aO6iVbIGY7CEcVJqfOYYz5ZJqvBUgJoiLcEsft6u0q/exec";
 
-// 🔐 تسجيل الدخول
-function login(){
-  if(
-    document.getElementById("email").value==="saeed_200911@hotmail.com" &&
-    document.getElementById("pass").value==="Saee200911"
-  ){
-    document.getElementById("login").style.display="none";
-    document.getElementById("app").classList.remove("hidden");
-  }else{
-    alert("❌ بيانات خاطئة");
-  }
-}
-
-// 🔁 التنقل
-function showPage(page){
-  document.getElementById("dashboard").classList.add("hidden");
-  document.getElementById("create").classList.add("hidden");
-
-  document.getElementById(page).classList.remove("hidden");
-}
-
-// 🚀 إنشاء كود
-function create(){
+async function sendData() {
   const data = {
-    name: name.value,
-    phone: phone.value,
-    deviceId: device.value,
-    duration: duration.value,
-    amount: amount.value,
-    country: country.value
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    device: document.getElementById("device").value,
+    duration: document.getElementById("duration").value
   };
 
-  // هنا تحط API حقك
-  console.log(data);
+  const res = await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
 
-  result.innerText = "✅ تم الإرسال (اربط API)";
+  const result = await res.json();
+
+  document.getElementById("result").innerHTML =
+    "✅ الكود: " + result.code + "<br>" +
+    "📅 تاريخ الانتهاء: " + result.endDate + "<br>" +
+    "🔵 الحالة: " + result.status;
 }
-
 </script>
 
 </body>
